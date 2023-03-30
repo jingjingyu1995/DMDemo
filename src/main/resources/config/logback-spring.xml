@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- 文件输出格式 -->
+	<property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+	<!-- test文件路径 -->
+	<property name="TEST_FILE_PATH" value="/opt/project/test-control-api/app.out" />
+	<!-- pro文件路径 -->
+	<property name="PRO_FILE_PATH" value="/opt/runjar/control_api/app.out" />
+
+
+	<appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${user.dir}/logs/error/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<MaxHistory>10</MaxHistory>
+			<totalSizeCap>100MB</totalSizeCap>
+			<cleanHistoryOnStart>false</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--错误日志文件-->
+	<logger name="errorLog" level="info" additivity="false">
+		<appender-ref ref="errorAppender"/>
+	</logger>
+
+
+	<!-- 开发环境 -->
+	<springProfile name="dev">
+		<appender name="TEST-FILE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+		<root level="info">
+			<appender-ref ref="TEST-FILE" />
+		</root>
+	</springProfile>
+
+	<!-- 测试环境 -->
+	<springProfile name="test">
+		<appender name="PROD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${user.dir}/logs/spring.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<MaxHistory>10</MaxHistory>
+				<totalSizeCap>2GB</totalSizeCap>
+				<cleanHistoryOnStart>false</cleanHistoryOnStart>
+			</rollingPolicy>
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+		<root level="INFO">
+			<appender-ref ref="PROD_FILE" />
+		</root>
+	</springProfile>
+
+	<!-- 生产环境 -->
+	<springProfile name="prod">
+		<appender name="PROD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>${user.dir}/logs/spring.%d{yyyy-MM-dd}.log</fileNamePattern>
+				<MaxHistory>10</MaxHistory>
+				<totalSizeCap>2GB</totalSizeCap>
+				<cleanHistoryOnStart>false</cleanHistoryOnStart>
+			</rollingPolicy>
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+		<root level="INFO">
+			<appender-ref ref="PROD_FILE" />
+		</root>
+	</springProfile>
+</configuration>
